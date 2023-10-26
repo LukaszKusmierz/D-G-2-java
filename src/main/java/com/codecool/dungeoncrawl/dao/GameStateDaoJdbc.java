@@ -2,6 +2,7 @@ package com.codecool.dungeoncrawl.dao;
 
 import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.PlayerModel;
+import com.google.gson.Gson;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -28,4 +29,5 @@ public class GameStateDaoJdbc implements GameStateDao {
     public List<GameState> getAll() {
         return null;
     }
+
 }

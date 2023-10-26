@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.model.PlayerModel;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerDaoJdbc implements PlayerDao {
@@ -33,16 +34,60 @@ public class PlayerDaoJdbc implements PlayerDao {
 
     @Override
     public void update(PlayerModel player) {
+        try (Connection connection = dataSource.getConnection()) {
+            String UPDATE_PLAYER = "UPDATE player SET (player_name, hp, x, y) = (?,?,?,?) WHERE id=?";
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(UPDATE_PLAYER);
+            preparedStatement.setString(1, player.getPlayerName());
+            preparedStatement.setInt(2, player.getHp());
+            preparedStatement.setInt(3, player.getX());
+            preparedStatement.setInt(4, player.getY());
+            preparedStatement.setInt(5, player.getId());
+            preparedStatement.executeUpdate();
+        }catch(SQLException exception) {
+            System.out.println(exception.getMessage());
+        }
 
     }
 
     @Override
     public PlayerModel get(int id) {
+        try(Connection connection = dataSource.getConnection()) {
+            String GET_PLAYER_BY_ID = "SELECT player_name, x, y FROM player WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_PLAYER_BY_ID);
+            preparedStatement.setInt(1, id);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()){
+                    String playerName  = resultSet.getString("player_name");
+                    int playerX = resultSet.getInt("x");
+                    int playerY = resultSet.getInt("y");
+                    return new PlayerModel(playerName, playerX , playerY);
+                }
+            }
+        }catch (SQLException exception){
+            throw new RuntimeException(exception);
+        }
         return null;
     }
 
     @Override
     public List<PlayerModel> getAll() {
-        return null;
+        List<PlayerModel> playersList = new ArrayList<>();
+        try(Connection connection = dataSource.getConnection()) {
+            String GET_ALL_PLAYERS = "SELECT player_name, x, y FROM player";
+            try( ResultSet resultSet = connection.createStatement().executeQuery(GET_ALL_PLAYERS)) {
+                while (resultSet.next()){
+                    String playerName  = resultSet.getString("player_name");
+                    int playerX = resultSet.getInt("x");
+                    int playerY = resultSet.getInt("y");
+                    PlayerModel playerModel =new PlayerModel(playerName, playerX , playerY);
+                    playersList.add(playerModel);
+                }
+            }
+        }catch(SQLException exception) {
+            throw new RuntimeException(exception);
+        }
+        return playersList;
     }
+
 }

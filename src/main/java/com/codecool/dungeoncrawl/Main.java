@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl;
 
+import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.*;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.*;
@@ -58,6 +59,7 @@ public class Main extends Application implements MonsterEventListener {
     Button buttonSubmit = new Button("Submit");
     Button buttonExit = new Button("EXIT");
     Button buttonPlayAgain = new Button("Play again");
+    GameDatabaseManager gameDatabaseManager = new GameDatabaseManager();
     
     public static void main(String[] args) {
         launch(args);
