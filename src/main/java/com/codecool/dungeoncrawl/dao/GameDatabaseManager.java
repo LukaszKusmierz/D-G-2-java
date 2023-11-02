@@ -65,7 +65,7 @@ public class GameDatabaseManager {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         String dbName = "dungeon_DB";
         String user = "postgres";
-        String password = "nikola";
+        String password = "postgres";
 
         dataSource.setDatabaseName(dbName);
         dataSource.setUser(user);
